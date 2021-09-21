@@ -9,6 +9,8 @@ services:
     working_dir: /app
     ports:
       - 8080:8080
+    volumes:
+      - ./static:/app/static
     environment:
       - MARVEL_PUBLIC_KEY
       - MARVEL_PRIVATE_KEY
