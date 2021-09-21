@@ -12,7 +12,7 @@ import (
 // @Summary Get marvel character by id
 // @Produce json
 // @Param id path int true "Character ID"
-// @Success 200 {object} controller.Character
+// @Success 200 {object} model.Character
 // @Failure 404 {string} string Character not found
 // @Failure 500 {string} string Error while processing request
 // @Router /characters/{id} [get]
@@ -34,4 +34,16 @@ func GetCharacter(getTs func() int64, client *http.Client) func(*gin.Context) {
 
 		c.IndentedJSON(result.StatusCode, result.Character)
 	}
+}
+
+// NOTE: below is a dummy code to trick swaggo to generate the swagger files. such is life
+
+// GET Characters godoc
+// @Summary Get all marvel character id
+// @Produce json
+// @Success 200 {object} []int
+// @Failure 500 {string} string Error while processing request
+// @Router /characters [get]
+func GetCharacters() func(*gin.Context) {
+	return func(c *gin.Context) {}
 }

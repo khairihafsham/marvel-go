@@ -9,6 +9,31 @@
     "host": "localhost:8080",
     "basePath": "/",
     "paths": {
+        "/characters": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get all marvel character id",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/characters/{id}": {
             "get": {
                 "produces": [
@@ -28,7 +53,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controller.Character"
+                            "$ref": "#/definitions/model.Character"
                         }
                     },
                     "404": {
@@ -48,7 +73,7 @@
         }
     },
     "definitions": {
-        "controller.Character": {
+        "model.Character": {
             "type": "object",
             "properties": {
                 "description": {

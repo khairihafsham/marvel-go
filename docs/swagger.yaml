@@ -1,6 +1,6 @@
 basePath: /
 definitions:
-  controller.Character:
+  model.Character:
     properties:
       description:
         type: string
@@ -16,6 +16,22 @@ info:
   title: Marvel Character API
   version: "1.0"
 paths:
+  /characters:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: integer
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get all marvel character id
   /characters/{id}:
     get:
       parameters:
@@ -30,7 +46,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controller.Character'
+            $ref: '#/definitions/model.Character'
         "404":
           description: Not Found
           schema:
