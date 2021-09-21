@@ -83,3 +83,50 @@ func GetAllCharacter(getTs func() int64, offset int, limit int, client *http.Cli
 
 	return wrapper, nil
 }
+
+func GetAllCharacterId(getTs func() int64, limit int, client *http.Client) ([]int, error) {
+	var ids []int
+	var count, total, offset int
+
+	if limit == 0 {
+		limit = 100
+	}
+
+	result, err := GetAllCharacter(getTs, offset, limit, client)
+
+	if err != nil {
+		return []int{}, err
+	}
+
+	count = result.Data.Count
+	total = result.Data.Total
+	offset += limit
+
+	getIds := func(target []int, characters []m.MarvelCharacter) []int {
+		for _, character := range characters {
+			target = append(target, character.Id)
+		}
+
+		return target
+	}
+
+	ids = getIds(ids, result.Data.Results)
+
+	log.Printf("Got %d ids", len(ids))
+
+	for offset < total && count != 0 {
+		result, err = GetAllCharacter(getTs, offset, limit, client)
+
+		if err != nil {
+			return []int{}, err
+		}
+
+		count = result.Data.Count
+		offset += limit
+		ids = getIds(ids, result.Data.Results)
+
+		log.Printf("Got %d ids", len(ids))
+	}
+
+	return ids, nil
+}

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -59,6 +60,7 @@ func TestGetAllCharacter(t *testing.T) {
 	os.Setenv(ENV_MARVEL_PUBLIC_KEY, "public")
 	originalPrivKey := os.Getenv(ENV_MARVEL_PRIVATE_KEY)
 	os.Setenv(ENV_MARVEL_PRIVATE_KEY, "private")
+	log.SetOutput(ioutil.Discard)
 
 	t.Run("Success offset=0 limit=10", func(t *testing.T) {
 		r, err := recorder.New("../fixture/allcharacters-offset0-limit10")
@@ -193,6 +195,42 @@ func TestGetAllCharacter(t *testing.T) {
 
 		if err == nil {
 			t.Fatalf("Expected error, got nil")
+		}
+	})
+
+	// NOTE: teardown
+	os.Setenv(ENV_MARVEL_PUBLIC_KEY, originalPubKey)
+	os.Setenv(ENV_MARVEL_PRIVATE_KEY, originalPrivKey)
+}
+
+func TestGetAllCharacterId(t *testing.T) {
+	// NOTE: Setup
+	originalPubKey := os.Getenv(ENV_MARVEL_PUBLIC_KEY)
+	os.Setenv(ENV_MARVEL_PUBLIC_KEY, "public")
+	originalPrivKey := os.Getenv(ENV_MARVEL_PRIVATE_KEY)
+	os.Setenv(ENV_MARVEL_PRIVATE_KEY, "private")
+	log.SetOutput(ioutil.Discard)
+
+	t.Run("Success limit=10 total=19", func(t *testing.T) {
+		r, err := recorder.New("../fixture/allcharacters-3-complete-requests")
+
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer r.Stop()
+
+		client := &http.Client{
+			Transport: r,
+		}
+
+		result, err := GetAllCharacterId(func() int64 { return 1632146917 }, 10, client)
+
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		if len(result) != 19 {
+			t.Errorf("Expected 19 results, got %d", len(result))
 		}
 	})
 
