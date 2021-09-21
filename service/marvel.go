@@ -34,6 +34,11 @@ func BuildCharacterUrl(ts int64, id int) string {
 		buildHash(ts, getPublicKey(), getPrivateKey()))
 }
 
+func BuildAllCharacterUrl(ts int64, offset int, limit int) string {
+	return fmt.Sprintf("%s/characters?orderBy=name&offset=%d&limit=%d&ts=%d&apikey=%s&hash=%s", getUrl(), offset, limit, ts,
+		getPublicKey(), buildHash(ts, getPublicKey(), getPrivateKey()))
+}
+
 func GetTs() int64 {
 	return time.Now().Unix()
 }
