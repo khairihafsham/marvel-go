@@ -1,1 +1,1 @@
-* * * * * root /app/script/updateAllCharacterIds.sh
+*/30 * * * * root /app/script/updateAllCharacterIds.sh
