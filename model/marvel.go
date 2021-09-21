@@ -6,6 +6,10 @@ type MarvelCharacterDataWrapper struct {
 }
 
 type MarvelCharacterDataContainer struct {
+	Offset  int               `json:"offset"`
+	Limit   int               `json:"limit"`
+	Count   int               `json:"count"`
+	Total   int               `json:"total"`
 	Results []MarvelCharacter `json:"results"`
 }
 

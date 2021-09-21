@@ -1,0 +1,25 @@
+---
+version: 1
+interactions:
+- request:
+    body: ""
+    form: {}
+    headers: {}
+    url: http://gateway.marvel.com/v1/public/characters?orderBy=name&offset=1560&limit=10&ts=1632146917&apikey=public&hash=1579e01b1726d59e140d15d3a39443f3
+    method: GET
+  response:
+    body: '{"code":200,"status":"Ok","copyright":"© 2021 MARVEL","attributionText":"Data
+      provided by Marvel. © 2021 MARVEL","attributionHTML":"<a href=\"http://marvel.com\">Data
+      provided by Marvel. © 2021 MARVEL</a>","etag":"14d454565573016f2fa6f1024492dc9d7f6fc4e8","data":{"offset":1560,"limit":10,"total":1559,"count":0,"results":[]}}'
+    headers:
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Tue, 21 Sep 2021 05:50:25 GMT
+      Etag:
+      - 14d454565573016f2fa6f1024492dc9d7f6fc4e8
+    status: 200 OK
+    code: 200
+    duration: 1.1234524s

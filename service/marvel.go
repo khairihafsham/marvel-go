@@ -2,7 +2,13 @@ package service
 
 import (
 	"crypto/md5"
+	"encoding/json"
+	"errors"
 	"fmt"
+	"io/ioutil"
+	"log"
+	m "marvel/model"
+	"net/http"
 	"os"
 	"time"
 )
@@ -41,4 +47,39 @@ func BuildAllCharacterUrl(ts int64, offset int, limit int) string {
 
 func GetTs() int64 {
 	return time.Now().Unix()
+}
+
+func GetAllCharacter(getTs func() int64, offset int, limit int, client *http.Client) (m.MarvelCharacterDataWrapper, error) {
+	resp, err := client.Get(BuildAllCharacterUrl(getTs(), offset, limit))
+
+	if err != nil {
+		return m.MarvelCharacterDataWrapper{}, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Printf("Error: %v", err)
+
+		return m.MarvelCharacterDataWrapper{}, err
+	}
+
+	if resp.StatusCode != 200 {
+		log.Printf("Error: %v %s", resp.StatusCode, string(body))
+
+		return m.MarvelCharacterDataWrapper{}, errors.New("Unsuccessful API request")
+	}
+
+	wrapper := m.MarvelCharacterDataWrapper{}
+
+	err = json.Unmarshal(body, &wrapper)
+
+	if err != nil {
+		log.Printf("Error: %v", err)
+
+		return m.MarvelCharacterDataWrapper{}, err
+	}
+
+	return wrapper, nil
 }
