@@ -9,10 +9,11 @@ I've never written a single line of Go before 4 days ago. Please excuse my codin
 
 # Setup
 
-1. Run `docker-compose build server` to build the base image.
-2. Run `docker-compose up updatefile`. Wait until you see `Ready to serve API` appears in the log.
-3. Run `docker-compose up server`.
-4. Run `docker-compose up test` to run the unit tests.
+1. Export Marvel's public and private keys to MARVEL_PUBLIC_KEY and MARVEL_PRIVATE_KEY respectively, as environment variables
+2. Run `docker-compose build server` to build the base image.
+3. Run `docker-compose up updatefile`. Wait until you see `Ready to serve API` appears in the log.
+4. Run `docker-compose up server`.
+5. Run `docker-compose up test` to run the unit tests.
 
 # Swagger
 
