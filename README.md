@@ -1,6 +1,6 @@
 # Background
 
-I've never written a single line of Go before 4 days ago. Please excuse my coding style if they are not idiomatic in Go.
+I've never written a single line of Go before 4 days ago. Please excuse my coding style if they are not idiomatic or not correct.
 
 # Requirements
 
@@ -33,7 +33,7 @@ a reliable indicator to decide whether to update the cache or not.
 
 ### Direct caching on API request
 
-In this approach, both logic for reading and updating cache are done during the request to the `/character` endpoint
+In this approach, both logic for reading and updating cache are done during the request to the `/characters` endpoint
 The cache is stored in some kind of storage, e.g in-memory or redis.
 
 #### Warm up
@@ -44,7 +44,7 @@ with data from Marvel API
 
 #### Reading
 
-All requests to `/character` will trigger requests to the cache. If it is in-memory cache, it will be faster. Using
+All requests to `/characters` will trigger requests to the cache. If it is in-memory cache, it will be faster. Using
 external storage such as redis will impose certain penalty to the request, not to mention another potential point of
 networking failure.
 
@@ -72,7 +72,7 @@ maintain consistency.
 3. Race condition. If Marvel somehow update the character list multiple times within a short period of time AND the `Total`
 value also changes during the period, there is a possibility that multiple instance of requests has a different world view
 of the data from Marvel. If multiple updates are done together concurrently, there is possibility that a stale version
-of the data wins and our API will end up outdated data without knowing about it.
+of the data wins and our API will end up with outdated data without knowing about it.
 
 ### Separate cache reader and writer
 
@@ -109,3 +109,9 @@ target location.
 Since file is used as cache and at the moment it is served from the filesystem. The filesystem will be the bottleneck
 as the number of requests increases. But, as mention, static file strategy allows for other alternative approaches.
 Something akin to CDN comes to mind.
+
+Multiple script can be triggered accidentally at the same time. Therefore introducing concurrency issue that we would like
+to avoid. A few things can be done to prevent this, namely using lock file. If a lock exists, then other other scripts will
+just terminate and not run. Of course, lock file have issues of its own.
+
+Since script runs in the background, it has to be monitored somehow and notify when there's something wrong.
