@@ -6,36 +6,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	m "marvel/model"
 	"net/http"
 	"os"
 	"time"
 )
-
-type MarvelCharacterDataWrapper struct {
-	Data MarvelCharacterDataContainer `json:"data"`
-	Etag string                       `json:"etag"`
-}
-
-type MarvelCharacterDataContainer struct {
-	Results []MarvelCharacter `json:"results"`
-}
-
-type MarvelCharacter struct {
-	Id          int    `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
-type Character struct {
-	Id          int    `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
-type Result struct {
-	Character  Character
-	StatusCode int
-}
 
 const ENV_MARVEL_URL string = "MARVEL_URL"
 const ENV_MARVEL_PRIVATE_KEY string = "MARVEL_PRIVATE_KEY"
@@ -68,19 +43,19 @@ func GetTs() int64 {
 	return time.Now().Unix()
 }
 
-func GetMarvelCharacter(getTs func() int64, id int, client *http.Client) Result {
+func GetMarvelCharacter(getTs func() int64, id int, client *http.Client) m.CharacterResult {
 	resp, err := client.Get(buildCharacterUrl(getTs(), id))
 
 	if err != nil {
 		log.Println("Error:", err)
 
-		return Result{StatusCode: 500, Character: Character{}}
+		return m.CharacterResult{StatusCode: 500, Character: m.Character{}}
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode == 404 {
-		return Result{StatusCode: 404, Character: Character{}}
+		return m.CharacterResult{StatusCode: 404, Character: m.Character{}}
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -88,32 +63,32 @@ func GetMarvelCharacter(getTs func() int64, id int, client *http.Client) Result 
 	if err != nil {
 		log.Println("Error:", err)
 
-		return Result{StatusCode: 500, Character: Character{}}
+		return m.CharacterResult{StatusCode: 500, Character: m.Character{}}
 	}
 
 	if resp.StatusCode != 200 {
 		log.Println("Error:", resp.StatusCode, string(body))
 
-		return Result{StatusCode: 500, Character: Character{}}
+		return m.CharacterResult{StatusCode: 500, Character: m.Character{}}
 	}
 
-	wrapper := MarvelCharacterDataWrapper{}
+	wrapper := m.MarvelCharacterDataWrapper{}
 
 	err = json.Unmarshal(body, &wrapper)
 
 	if err != nil {
 		log.Println("Error:", err)
 
-		return Result{StatusCode: 500, Character: Character{}}
+		return m.CharacterResult{StatusCode: 500, Character: m.Character{}}
 	}
 
 	if len(wrapper.Data.Results) == 0 {
 		log.Println("Error: received no data")
 
-		return Result{StatusCode: 500, Character: Character{}}
+		return m.CharacterResult{StatusCode: 500, Character: m.Character{}}
 	}
 
 	mc := wrapper.Data.Results[0]
 
-	return Result{StatusCode: 200, Character: Character{Id: mc.Id, Name: mc.Name, Description: mc.Description}}
+	return m.CharacterResult{StatusCode: 200, Character: m.Character{Id: mc.Id, Name: mc.Name, Description: mc.Description}}
 }
