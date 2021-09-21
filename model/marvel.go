@@ -20,9 +20,9 @@ type MarvelCharacter struct {
 }
 
 type Character struct {
-	Id          int    `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	Id          int    `json:"Id"`
+	Name        string `json:"Name"`
+	Description string `json:"Description"`
 }
 
 type CharacterResult struct {
