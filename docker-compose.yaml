@@ -4,10 +4,9 @@ services:
   server:
     build:
       context: .
-    command: bash -c "go get & go build & go run ."
+    image: marvel
+    command: go run .
     working_dir: /app
-    volumes:
-      - ./:/app
     ports:
       - 8080:8080
     environment:
@@ -15,11 +14,10 @@ services:
       - MARVEL_PRIVATE_KEY
       - MARVEL_URL=http://gateway.marvel.com/v1/public
 
-  test:
-    build:
-      context: .
-    command: bash -c "go get -t & go build & go test ./... -v"
-    working_dir: /app
+  updatefile:
+    image: marvel
+    command: ./warmup.sh
+    working_dir: /app/script
     volumes:
       - ./:/app
     environment:
@@ -27,9 +25,17 @@ services:
       - MARVEL_PRIVATE_KEY
       - MARVEL_URL=http://gateway.marvel.com/v1/public
 
+  test:
+    image: marvel
+    command: go test ./... -v
+    working_dir: /app
+    environment:
+      - MARVEL_PUBLIC_KEY
+      - MARVEL_PRIVATE_KEY
+      - MARVEL_URL=http://gateway.marvel.com/v1/public
+
   swag:
-    build:
-      context: .
+    image: marvel
     command: bash -c "go install github.com/swaggo/swag/cmd/swag@latest && swag init && rm docs/docs.go"
     working_dir: /app
     volumes:
