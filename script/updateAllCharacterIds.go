@@ -28,12 +28,14 @@ func shouldRefreshData(totalPath string, total int) bool {
 
 	if err != nil {
 		log.Fatalf("Error: %v", err)
+		os.Exit(1)
 	}
 
 	totalInFile, err := strconv.Atoi(strings.TrimSuffix(string(totalContent), "\n"))
 
 	if err != nil {
 		log.Fatalf("Error: %v", err)
+		os.Exit(1)
 	}
 
 	if totalInFile == total {
@@ -49,6 +51,7 @@ func updateTotal(totalPath string, total int) {
 	f, err := os.Create(totalPath)
 	if err != nil {
 		log.Fatalf("Error: %v", err)
+		os.Exit(1)
 	}
 	defer f.Close()
 
@@ -56,6 +59,7 @@ func updateTotal(totalPath string, total int) {
 
 	if err != nil {
 		log.Fatalf("Error: %v", err)
+		os.Exit(1)
 	}
 
 	log.Printf("Written total to %s", totalPath)
@@ -69,6 +73,7 @@ func main() {
 
 	if err != nil {
 		log.Fatalf("Error: %v", err)
+		os.Exit(1)
 	}
 
 	log.SetOutput(logwriter)
@@ -77,6 +82,7 @@ func main() {
 
 	if len(os.Args) < 3 {
 		log.Fatalf("Error: 2 file paths required")
+		os.Exit(1)
 	}
 
 	path := strings.TrimSpace(string(os.Args[1]))
@@ -85,6 +91,7 @@ func main() {
 
 	if err != nil {
 		log.Fatalf("Error: %v", err)
+		os.Exit(1)
 	}
 
 	if shouldRefreshData(totalPath, oneCharacter.Data.Total) == false {
@@ -97,12 +104,14 @@ func main() {
 
 	if err != nil {
 		log.Fatalf("Error: %v", err)
+		os.Exit(1)
 	}
 
 	ids, err := json.Marshal(result)
 
 	if err != nil {
 		log.Fatalf("Error: %v", err)
+		os.Exit(1)
 	}
 
 	err = os.WriteFile(path, ids, 0644)
@@ -111,6 +120,7 @@ func main() {
 
 	if err != nil {
 		log.Fatalf("Error: %v", err)
+		os.Exit(1)
 	}
 
 	updateTotal(totalPath, oneCharacter.Data.Total)
