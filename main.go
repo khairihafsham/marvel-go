@@ -2,7 +2,7 @@ package main
 
 import (
 	"marvel/adapter"
-	"marvel/controller"
+	"marvel/service"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -16,7 +16,7 @@ import (
 // @BasePath /
 func main() {
 	router := gin.Default()
-	router.GET("/characters/:id", adapter.GetCharacter(controller.GetTs, http.DefaultClient))
+	router.GET("/characters/:id", adapter.GetCharacter(service.GetTs, http.DefaultClient))
 
 	router.Run("0.0.0.0:8080")
 }

@@ -3,6 +3,7 @@ package controller
 import (
 	"io/ioutil"
 	"log"
+	"marvel/service"
 	"net/http"
 	"os"
 	"strings"
@@ -13,10 +14,10 @@ import (
 
 func TestGetCharacter(t *testing.T) {
 	// NOTE: Setup
-	originalPubKey := os.Getenv(ENV_MARVEL_PUBLIC_KEY)
-	os.Setenv(ENV_MARVEL_PUBLIC_KEY, "public")
-	originalPrivKey := os.Getenv(ENV_MARVEL_PRIVATE_KEY)
-	os.Setenv(ENV_MARVEL_PRIVATE_KEY, "private")
+	originalPubKey := os.Getenv(service.ENV_MARVEL_PUBLIC_KEY)
+	os.Setenv(service.ENV_MARVEL_PUBLIC_KEY, "public")
+	originalPrivKey := os.Getenv(service.ENV_MARVEL_PRIVATE_KEY)
+	os.Setenv(service.ENV_MARVEL_PRIVATE_KEY, "private")
 
 	t.Run("Success", func(t *testing.T) {
 		r, err := recorder.New("../fixture/character200")
@@ -108,6 +109,6 @@ func TestGetCharacter(t *testing.T) {
 	})
 
 	// NOTE: teardown
-	os.Setenv(ENV_MARVEL_PUBLIC_KEY, originalPubKey)
-	os.Setenv(ENV_MARVEL_PRIVATE_KEY, originalPrivKey)
+	os.Setenv(service.ENV_MARVEL_PUBLIC_KEY, originalPubKey)
+	os.Setenv(service.ENV_MARVEL_PRIVATE_KEY, originalPrivKey)
 }

@@ -1,50 +1,16 @@
 package controller
 
 import (
-	"crypto/md5"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	m "marvel/model"
+	s "marvel/service"
 	"net/http"
-	"os"
-	"time"
 )
 
-const ENV_MARVEL_URL string = "MARVEL_URL"
-const ENV_MARVEL_PRIVATE_KEY string = "MARVEL_PRIVATE_KEY"
-const ENV_MARVEL_PUBLIC_KEY string = "MARVEL_PUBLIC_KEY"
-
-func getUrl() string {
-	return os.Getenv(ENV_MARVEL_URL)
-}
-
-func getPrivateKey() string {
-	return os.Getenv(ENV_MARVEL_PRIVATE_KEY)
-}
-
-func getPublicKey() string {
-	return os.Getenv(ENV_MARVEL_PUBLIC_KEY)
-}
-
-func buildHash(ts int64, publicKey string, privateKey string) string {
-	data := []byte(fmt.Sprintf("%d%s%s", ts, privateKey, publicKey))
-
-	return fmt.Sprintf("%x", md5.Sum(data))
-}
-
-func buildCharacterUrl(ts int64, id int) string {
-	return fmt.Sprintf("%s/characters/%d?ts=%d&apikey=%s&hash=%s", getUrl(), id, ts, getPublicKey(),
-		buildHash(ts, getPublicKey(), getPrivateKey()))
-}
-
-func GetTs() int64 {
-	return time.Now().Unix()
-}
-
 func GetMarvelCharacter(getTs func() int64, id int, client *http.Client) m.CharacterResult {
-	resp, err := client.Get(buildCharacterUrl(getTs(), id))
+	resp, err := client.Get(s.BuildCharacterUrl(getTs(), id))
 
 	if err != nil {
 		log.Println("Error:", err)

@@ -3,7 +3,7 @@ package adapter
 import (
 	"io/ioutil"
 	"log"
-	"marvel/controller"
+	"marvel/service"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -19,10 +19,10 @@ func getTs() int64 {
 
 func TestGetCharacter(t *testing.T) {
 	// NOTE: Setup
-	originalPubKey := os.Getenv(controller.ENV_MARVEL_PUBLIC_KEY)
-	os.Setenv(controller.ENV_MARVEL_PUBLIC_KEY, "public")
-	originalPrivKey := os.Getenv(controller.ENV_MARVEL_PRIVATE_KEY)
-	os.Setenv(controller.ENV_MARVEL_PRIVATE_KEY, "private")
+	originalPubKey := os.Getenv(service.ENV_MARVEL_PUBLIC_KEY)
+	os.Setenv(service.ENV_MARVEL_PUBLIC_KEY, "public")
+	originalPrivKey := os.Getenv(service.ENV_MARVEL_PRIVATE_KEY)
+	os.Setenv(service.ENV_MARVEL_PRIVATE_KEY, "private")
 
 	t.Run("Success", func(t *testing.T) {
 		gin.SetMode(gin.TestMode)
@@ -107,6 +107,6 @@ func TestGetCharacter(t *testing.T) {
 	})
 
 	// NOTE: teardown
-	os.Setenv(controller.ENV_MARVEL_PUBLIC_KEY, originalPubKey)
-	os.Setenv(controller.ENV_MARVEL_PRIVATE_KEY, originalPrivKey)
+	os.Setenv(service.ENV_MARVEL_PUBLIC_KEY, originalPubKey)
+	os.Setenv(service.ENV_MARVEL_PRIVATE_KEY, originalPrivKey)
 }
