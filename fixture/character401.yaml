@@ -1,0 +1,21 @@
+---
+version: 1
+interactions:
+- request:
+    body: ""
+    form: {}
+    headers: {}
+    url: http://gateway.marvel.com/v1/public/characters/1017100?ts=1632146917&apikey=public&hash=1579e01b1726d59e140d15d3a39443f3
+    method: GET
+  response:
+    body: '{"code":"InvalidCredentials","message":"That hash, timestamp and key combination is invalid."}'
+    headers:
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 20 Sep 2021 14:36:59 GMT
+    status: 401 Invalid Hash
+    code: 401
+    duration: 712.7048ms

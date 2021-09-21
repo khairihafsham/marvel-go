@@ -1,0 +1,4 @@
+*.sw[p|o]
+.envrc
+marvel
+.DS_Store
