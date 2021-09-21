@@ -1,6 +1,7 @@
 package adapter
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"marvel/service"
@@ -105,6 +106,29 @@ func TestGetCharacter(t *testing.T) {
 			t.Errorf("Expected 500, got %d", w.Code)
 		}
 	})
+
+	invalids := []string{"abc", "123abc", "a1b2c", "1231-123123-213213"}
+
+	for _, invalidId := range invalids {
+		t.Run(fmt.Sprintf("Failure invalid id=%s returns 404", invalidId), func(t *testing.T) {
+			log.SetOutput(ioutil.Discard)
+			gin.SetMode(gin.TestMode)
+
+			lambda := GetCharacter(getTs, http.DefaultClient)
+
+			w := httptest.NewRecorder()
+			c, _ := gin.CreateTestContext(w)
+
+			c.Params = gin.Params{gin.Param{Key: "id", Value: invalidId}}
+
+			lambda(c)
+
+			if w.Code != 404 {
+				t.Errorf("Expected 404, got %d", w.Code)
+			}
+		})
+
+	}
 
 	// NOTE: teardown
 	os.Setenv(service.ENV_MARVEL_PUBLIC_KEY, originalPubKey)
